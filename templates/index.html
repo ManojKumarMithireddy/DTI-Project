@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISL Recognition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #f5f7ff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .app-description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .video-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 75%; /* 4:3 Aspect Ratio */
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background-color: #e9ecef;
+        }
+
+        #video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e68a00;
+            transform: translateY(-2px);
+        }
+
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            font-size: 1.2rem;
+        }
+
+        .sentence-display {
+            font-size: 1.5rem;
+            min-height: 60px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .sequence-display {
+            min-height: 60px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            font-family: monospace;
+        }
+
+        .history-container {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .history-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .history-item:hover {
+            transform: translateX(5px);
+        }
+
+        .history-timestamp {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .history-sentence {
+            font-weight: 500;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-active {
+            background-color: var(--success-color);
+            box-shadow: 0 0 8px var(--success-color);
+        }
+
+        .status-inactive {
+            background-color: var(--danger-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sign Language Recognition</h1>
+            <p class="app-description">Real-time translation of Sign Language to text using computer vision and machine learning</p>
+        </header>
+
+        <div class="main-content">
+            <div class="video-section">
+                <h2><i class="fas fa-video"></i> Camera Feed</h2>
+                <div class="video-container">
+                    <img id="video" src="{{ url_for('video_feed') }}" alt="Camera Feed">
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="start()">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <button class="btn btn-danger" onclick="stop()">
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                    <button class="btn btn-warning" onclick="clearHistory()">
+                        <i class="fas fa-trash-alt"></i> Clear History
+                    </button>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="card">
+                    <h3 class="card-title">
+                        <span id="status-indicator" class="status-indicator status-inactive"></span>
+                        <i class="fas fa-comment-alt"></i> Current Sentence
+                    </h3>
+                    <div id="sentence" class="sentence-display">Waiting for input...</div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">
+                        <i class="fas fa-project-diagram"></i> Detection Sequence
+                    </h3>
+                    <div id="sequence" class="sequence-display">No signs detected</div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">
+                        <i class="fas fa-history"></i> Translation History
+                    </h3>
+                    <div id="history" class="history-container">
+                        <div class="history-item">
+                            <div class="history-timestamp">System initialized</div>
+                            <div class="history-sentence">Welcome to ISL Recognition</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let isActive = false;
+
+        function start() {
+            fetch('/start', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    isActive = true;
+                    updateStatusIndicator();
+                });
+        }
+
+        function stop() {
+            fetch('/stop', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    isActive = false;
+                    updateStatusIndicator();
+                });
+        }
+
+        function clearHistory() {
+            fetch('/clear_history', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    document.getElementById('history').innerHTML = `
+                        <div class="history-item">
+                            <div class="history-timestamp">History cleared</div>
+                            <div class="history-sentence">History has been cleared</div>
+                        </div>
+                    `;
+                });
+        }
+
+        function updateStatusIndicator() {
+            const indicator = document.getElementById('status-indicator');
+            indicator.className = isActive 
+                ? 'status-indicator status-active' 
+                : 'status-indicator status-inactive';
+        }
+
+        function updateStatus() {
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('sentence').textContent = data.sentence || 'Waiting for input...';
+                    
+                    const sequenceText = data.sequence.length 
+                        ? data.sequence.join(' → ') 
+                        : 'No signs detected';
+                    document.getElementById('sequence').textContent = sequenceText;
+
+                    const historyDiv = document.getElementById('history');
+                    if (data.history && data.history.length > 0) {
+                        historyDiv.innerHTML = data.history.map(h => `
+                            <div class="history-item">
+                                <div class="history-timestamp">${new Date(h.timestamp).toLocaleString()}</div>
+                                <div class="history-sentence">${h.sentence}</div>
+                            </div>
+                        `).join('');
+                    }
+                });
+        }
+
+        setInterval(updateStatus, 1000); // Update every second
+    </script>
+</body>
+</html>

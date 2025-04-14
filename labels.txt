@@ -1,0 +1,1 @@
+labels = ['I', 'Eat', 'friend', 'go', 'Good', 'Happy', 'Hello', 'Love', 'what', 'n', 'Please', 'Thank you', 'want', 'who', 'Home', 'you']
